@@ -1065,6 +1065,7 @@ dependencies = [
     { name = "httpx" },
     { name = "langchain" },
     { name = "langchain-community" },
+    { name = "langchain-experimental" },
     { name = "langchain-google-genai" },
     { name = "langchain-groq" },
     { name = "langchain-huggingface" },
@@ -1073,6 +1074,7 @@ dependencies = [
     { name = "langchain-qdrant" },
     { name = "langgraph" },
     { name = "neo4j" },
+    { name = "nltk" },
     { name = "numpy" },
     { name = "openinference-instrumentation-langchain" },
     { name = "opentelemetry-sdk" },
@@ -1126,6 +1128,7 @@ requires-dist = [
     { name = "jupyter", marker = "extra == 'notebooks'", specifier = ">=1.1.0" },
     { name = "langchain", specifier = ">=0.3.0" },
     { name = "langchain-community", specifier = ">=0.3.0" },
+    { name = "langchain-experimental", specifier = ">=0.4.2" },
     { name = "langchain-google-genai", specifier = ">=2.0.0" },
     { name = "langchain-groq", specifier = ">=0.2.0" },
     { name = "langchain-huggingface", specifier = ">=0.1.0" },
@@ -1136,6 +1139,7 @@ requires-dist = [
     { name = "matplotlib", marker = "extra == 'notebooks'", specifier = ">=3.9.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11.0" },
     { name = "neo4j", specifier = ">=5.20.0" },
+    { name = "nltk", specifier = ">=3.9.4" },
     { name = "numpy", specifier = ">=1.26.0" },
     { name = "openinference-instrumentation-langchain", specifier = ">=0.1.0" },
     { name = "opentelemetry-sdk", specifier = ">=1.25.0" },
@@ -2506,6 +2510,19 @@ wheels = [
 ]
 
 [[package]]
+name = "langchain-experimental"
+version = "0.4.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-community" },
+    { name = "langchain-core" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d9/1c/8240195c1b27f2c45b2ee93a07b2a5a466c92dec8881fc1213ec8e3cb6a8/langchain_experimental-0.4.2.tar.gz", hash = "sha256:1130fa7ecad5959e687295b2f7850ae3e5d8eeee6796bf9e99910806475d8acc", size = 172068, upload-time = "2026-05-22T20:38:42.184Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f1/ce/5c56f08407648ab897b119a4add46391560a144285cf89e060091bc793e9/langchain_experimental-0.4.2-py3-none-any.whl", hash = "sha256:fd98b9948cb6f991e0f632ea3d5fb839bcfe21e6d5a190a51126a76270a66d40", size = 211226, upload-time = "2026-05-22T20:38:40.678Z" },
+]
+
+[[package]]
 name = "langchain-google-genai"
 version = "4.2.4"
 source = { registry = "https://pypi.org/simple" }
@@ -3289,6 +3306,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/6a/51/63fe664f3908c97be9d2e4f1158eb633317598cfa6e1fc14af5383f17512/networkx-3.6.1.tar.gz", hash = "sha256:26b7c357accc0c8cde558ad486283728b65b6a95d85ee1cd66bafab4c8168509", size = 2517025, upload-time = "2025-12-08T17:02:39.908Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9e/c9/b2622292ea83fbb4ec318f5b9ab867d0a28ab43c5717bb85b0a5f6b3b0a4/networkx-3.6.1-py3-none-any.whl", hash = "sha256:d47fbf302e7d9cbbb9e2555a0d267983d2aa476bac30e90dfbe5669bd57f3762", size = 2068504, upload-time = "2025-12-08T17:02:38.159Z" },
+]
+
+[[package]]
+name = "nltk"
+version = "3.9.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "joblib" },
+    { name = "regex" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/74/a1/b3b4adf15585a5bc4c357adde150c01ebeeb642173ded4d871e89468767c/nltk-3.9.4.tar.gz", hash = "sha256:ed03bc098a40481310320808b2db712d95d13ca65b27372f8a403949c8b523d0", size = 2946864, upload-time = "2026-03-24T06:13:40.641Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9d/91/04e965f8e717ba0ab4bdca5c112deeab11c9e750d94c4d4602f050295d39/nltk-3.9.4-py3-none-any.whl", hash = "sha256:f2fa301c3a12718ce4a0e9305c5675299da5ad9e26068218b69d692fda84828f", size = 1552087, upload-time = "2026-03-24T06:13:38.47Z" },
 ]
 
 [[package]]

@@ -1,14 +1,18 @@
 # Docustra — Enterprise Document Intelligence Platform
 
-> A production-grade RAG system demonstrating all 8 advanced retrieval-augmented generation architectural patterns on real enterprise documents (SEC 10-K filings).
+> A production-grade RAG system demonstrating **8 RAG architectural patterns** and **10 chunking strategies** — all selectable at runtime via a modern three-tab Streamlit UI, backed by a FastAPI server, Qdrant vector store, and Neo4j knowledge graph.
 
 [![CI](https://github.com/aritraju/docustra/actions/workflows/ci.yml/badge.svg)](https://github.com/aritraju/docustra/actions)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+> 📸 **Screenshots** → [`docs/screenshots/`](docs/screenshots/README.md)
+
 ---
 
 ## What This Project Demonstrates
+
+### 8 RAG Architectural Patterns
 
 | Pattern | Description | When It Wins |
 |---|---|---|
@@ -20,6 +24,23 @@
 | **HyDE** | Generates hypothetical doc → embeds it for search | Abstract / high-level queries |
 | **Multimodal RAG** | Describes images/charts via Vision LLM | Image-rich annual reports |
 | **Self-RAG** | LLM emits `[Retrieve]`, `[Relevant]`, `[Supported]` tokens | High-stakes, auditable answers |
+
+### 10 Chunking Strategies (all runtime-selectable with configurable parameters)
+
+| Strategy | Approach | LLM? |
+|---|---|---|
+| **Recursive** | Splits `\n\n` → `\n` → `.` → ` ` recursively (default) | No |
+| **Character** | Single configurable separator | No |
+| **Token** | tiktoken cl100k_base token count | No |
+| **Sentence Transformers** | Embedding model's own tokeniser | No |
+| **Semantic** | Topic-change detection via embedding similarity | No* |
+| **Sentence Window** | Index sentences; retrieve ±N surrounding context | No |
+| **Markdown** | Splits on `#`/`##`/`###` — header path in metadata | No |
+| **HTML** | Splits on `<h1>`–`<h4>` — heading breadcrumb in metadata | No |
+| **Parent-Child** | Small child indexed; large parent returned to LLM | No |
+| **Hypothetical Questions** | LLM generates questions per chunk; questions embedded | Yes 🤖 |
+
+*Uses the local embedding model, not the LLM API
 
 ---
 
@@ -72,6 +93,18 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for a deep-dive on each pattern's flow.
 | Testing | pytest · pytest-asyncio · RAGAS |
 | CI | GitHub Actions |
 | Dependency Mgmt | `uv` |
+
+---
+
+## UI Overview
+
+The Streamlit interface has three tabs:
+
+| Tab | Purpose |
+|---|---|
+| **📄 Document Intelligence** | Upload PDFs · select chunking strategy · configure parameters (chunk size, overlap, window size, etc.) · toggle knowledge graph build |
+| **🔍 RAG Query** | Ask questions · select any of 8 RAG patterns · view answer, reasoning tokens, sources, and metadata |
+| **📊 System Dashboard** | Service health (Qdrant, Neo4j, Redis) · vector count · links to Qdrant dashboard and Phoenix traces |
 
 ---
 

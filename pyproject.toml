@@ -61,6 +61,8 @@ dependencies = [
     "numpy>=1.26.0",
     "pandas>=2.2.0",
     "langchain-ollama>=1.1.0",
+    "langchain-experimental>=0.4.2",
+    "nltk>=3.9.4",
 ]
 
 [project.optional-dependencies]
