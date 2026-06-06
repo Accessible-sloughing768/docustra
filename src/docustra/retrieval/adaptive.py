@@ -115,9 +115,7 @@ class AdaptiveRAG(BaseRAGStrategy):
         )
         raw = (decompose_prompt | self._llm).invoke({"question": question}).content
         return [
-            line.split(". ", 1)[-1].strip()
-            for line in raw.strip().splitlines()
-            if line.strip()
+            line.split(". ", 1)[-1].strip() for line in raw.strip().splitlines() if line.strip()
         ][:3]
 
     def _complex_retrieval(self, question: str) -> RAGResponse:
