@@ -8,12 +8,14 @@ class QueryRequest(BaseModel):
     pattern: RAGPattern = RAGPattern.ADAPTIVE
     file_path: str | None = None
 
-    model_config = {"json_schema_extra": {
-        "example": {
-            "question": "What are the main risk factors disclosed in the 10-K filing?",
-            "pattern": "corrective",
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "question": "What are the main risk factors disclosed in the 10-K filing?",
+                "pattern": "corrective",
+            }
         }
-    }}
+    }
 
 
 class QueryResponse(BaseModel):

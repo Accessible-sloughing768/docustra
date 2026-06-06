@@ -5,6 +5,7 @@ The LLM acts as an orchestrator in a LangGraph ReAct loop.
 Available tools: vector_search, web_search, calculator.
 The agent iterates until it has sufficient context to answer.
 """
+
 from typing import Annotated, TypedDict
 
 from langchain_community.tools.tavily_search import TavilySearchResults
@@ -51,6 +52,7 @@ class AgenticRAG(BaseRAGStrategy):
         tools = [_make_vector_search_tool(vector_store)]
         if settings.tavily_api_key and settings.tavily_api_key != "your_tavily_api_key_here":
             import os
+
             os.environ["TAVILY_API_KEY"] = settings.tavily_api_key
             tools.append(TavilySearchResults(max_results=3))
 

@@ -1,4 +1,5 @@
 """Pre-built Cypher queries for common knowledge graph lookups."""
+
 from docustra.storage.graph_store import GraphStore
 
 

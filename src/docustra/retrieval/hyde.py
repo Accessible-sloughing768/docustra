@@ -6,6 +6,7 @@ That hypothetical answer (which stylistically resembles real documents)
 is embedded and used as the search vector instead of the raw query.
 This bridges the embedding space gap between short queries and long documents.
 """
+
 from langchain_core.prompts import ChatPromptTemplate
 
 from docustra.core import get_logger

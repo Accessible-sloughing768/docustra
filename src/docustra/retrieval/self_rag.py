@@ -9,6 +9,7 @@ The LLM generates reflection tokens at each step to self-critique:
 
 This makes the reasoning process transparent and auditable.
 """
+
 from dataclasses import dataclass
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -72,8 +73,7 @@ _USEFUL_PROMPT = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "Is this a useful and complete answer to the question? "
-            "Answer YES or NO only.",
+            "Is this a useful and complete answer to the question? Answer YES or NO only.",
         ),
         ("human", "Question: {question}\n\nAnswer: {answer}"),
     ]
@@ -101,11 +101,15 @@ class SelfRAG(BaseRAGStrategy):
 
         if not tokens.retrieve:
             direct = (
-                ChatPromptTemplate.from_messages(
-                    [("system", "Answer concisely."), ("human", "{question}")]
+                (
+                    ChatPromptTemplate.from_messages(
+                        [("system", "Answer concisely."), ("human", "{question}")]
+                    )
+                    | self._llm
                 )
-                | self._llm
-            ).invoke({"question": question}).content
+                .invoke({"question": question})
+                .content
+            )
             return RAGResponse(
                 answer=direct,
                 pattern=self.pattern,
@@ -134,7 +138,9 @@ class SelfRAG(BaseRAGStrategy):
 
         context = "\n\n".join(d.page_content for d in relevant_docs)
         answer = (
-            (_GENERATE_PROMPT | self._llm).invoke({"context": context, "question": question}).content
+            (_GENERATE_PROMPT | self._llm)
+            .invoke({"context": context, "question": question})
+            .content
         )
 
         # [Supported] token

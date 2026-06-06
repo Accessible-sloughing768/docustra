@@ -5,6 +5,7 @@ RAG evaluation using RAGAS metrics:
   - Context Precision: are retrieved chunks actually used?
   - Context Recall: does the retrieved context cover the answer?
 """
+
 from dataclasses import dataclass
 
 from datasets import Dataset

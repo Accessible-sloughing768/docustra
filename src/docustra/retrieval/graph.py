@@ -5,6 +5,7 @@ Queries the Neo4j knowledge graph to find entity relationships,
 then augments vector-retrieved context with graph-derived context.
 Excels at multi-hop questions: "How does regulation X affect vendor Y?"
 """
+
 from langchain_core.prompts import ChatPromptTemplate
 
 from docustra.core import get_logger

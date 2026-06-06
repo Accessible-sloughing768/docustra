@@ -1,4 +1,5 @@
 """Extracts entities and relationships from text using an LLM."""
+
 import json
 
 from langchain_core.documents import Document

@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from langchain_core.documents import Document
 
 from docustra.retrieval.base import RAGPattern
 from docustra.retrieval.hyde import HyDERAG
@@ -10,7 +9,7 @@ from docustra.retrieval.hyde import HyDERAG
 @pytest.fixture
 def hyde_strategy(mock_llm, mock_vector_store):
     with (
-        patch("docustra.retrieval.hyde.get_llm", return_value=mock_llm),
+        patch("docustra.retrieval.base.get_llm", return_value=mock_llm),
         patch("docustra.retrieval.hyde.VectorStore", return_value=mock_vector_store),
         patch("docustra.retrieval.hyde.get_embeddings", return_value=MagicMock()),
     ):

@@ -37,6 +37,7 @@ async def root():
 if settings.enable_tracing:
     try:
         from openinference.instrumentation.langchain import LangChainInstrumentor
+
         LangChainInstrumentor().instrument()
     except Exception:
         pass  # Non-fatal: tracing is optional

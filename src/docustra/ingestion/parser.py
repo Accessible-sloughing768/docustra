@@ -9,7 +9,7 @@ from langchain_core.documents import Document
 @dataclass
 class ParsedDocument:
     text_chunks: list[Document] = field(default_factory=list)
-    images: list[dict] = field(default_factory=list)   # [{page, b64, caption}]
+    images: list[dict] = field(default_factory=list)  # [{page, b64, caption}]
     tables: list[Document] = field(default_factory=list)
     metadata: dict = field(default_factory=dict)
 

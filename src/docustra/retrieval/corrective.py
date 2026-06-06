@@ -6,6 +6,7 @@ If the average score falls below a threshold, the system either:
   1. Reformulates the query and retries vector search, or
   2. Falls back to a live web search via Tavily.
 """
+
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
@@ -56,6 +57,7 @@ class CorrectiveRAG(BaseRAGStrategy):
         self._vector_store = VectorStore(get_embeddings())
         if settings.tavily_api_key and settings.tavily_api_key != "your_tavily_api_key_here":
             import os
+
             os.environ["TAVILY_API_KEY"] = settings.tavily_api_key
             self._web_search = TavilySearchResults(max_results=4)
         else:
@@ -66,8 +68,7 @@ class CorrectiveRAG(BaseRAGStrategy):
 
         docs_with_scores = self._vector_store.similarity_search_with_scores(question)
         avg_score = (
-            sum(s for _, s in docs_with_scores) / len(docs_with_scores)
-            if docs_with_scores else 0.0
+            sum(s for _, s in docs_with_scores) / len(docs_with_scores) if docs_with_scores else 0.0
         )
 
         logger.info("Retrieval scores", avg=round(avg_score, 3), threshold=self._threshold)
@@ -112,7 +113,9 @@ class CorrectiveRAG(BaseRAGStrategy):
         for doc in docs[:3]:
             try:
                 chain = _RELEVANCE_PROMPT | self._llm
-                raw = chain.invoke({"question": question, "document": doc.page_content[:500]}).content
+                raw = chain.invoke(
+                    {"question": question, "document": doc.page_content[:500]}
+                ).content
                 scores.append(float(raw.strip()))
             except (ValueError, Exception):
                 scores.append(0.5)

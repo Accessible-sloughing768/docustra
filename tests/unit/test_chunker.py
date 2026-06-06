@@ -1,4 +1,3 @@
-import pytest
 from langchain_core.documents import Document
 
 from docustra.ingestion.chunker import DocumentChunker

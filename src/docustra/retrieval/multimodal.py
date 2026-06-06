@@ -5,13 +5,13 @@ Handles images (charts, diagrams) extracted from documents.
 Uses Gemini Vision to generate text descriptions for each image at query time.
 Image descriptions are retrieved alongside text chunks for a unified answer.
 """
-import base64
+
 from pathlib import Path
 
 from langchain_core.messages import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 
-from docustra.core import get_logger, get_settings
+from docustra.core import get_logger
 from docustra.ingestion.embedder import get_embeddings
 from docustra.ingestion.parser import DocumentParser
 from docustra.retrieval.base import BaseRAGStrategy, RAGPattern, RAGResponse, get_llm
@@ -58,11 +58,11 @@ class MultimodalRAG(BaseRAGStrategy):
             for img_data in parsed.images[:5]:
                 desc = self._describe_image(img_data["b64"], img_data["ext"], question)
                 if desc:
-                    image_descriptions.append(
-                        f"[Image — Page {img_data['page']}]: {desc}"
-                    )
+                    image_descriptions.append(f"[Image — Page {img_data['page']}]: {desc}")
 
-        image_context = "\n\n".join(image_descriptions) if image_descriptions else "No images available."
+        image_context = (
+            "\n\n".join(image_descriptions) if image_descriptions else "No images available."
+        )
 
         chain = _SYNTHESIS_PROMPT | self._llm
         answer = chain.invoke(

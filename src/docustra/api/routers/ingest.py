@@ -1,8 +1,9 @@
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from docustra.api.schemas import IngestRequest, IngestResponse
 from docustra.core import IngestionError, get_logger
@@ -19,16 +20,16 @@ async def ingest_document(request: IngestRequest) -> IngestResponse:
         result = pipeline.ingest(request.file_path, build_graph=request.build_graph)
         return IngestResponse(**result)
     except IngestionError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:
         logger.error("Unexpected ingestion error", error=str(e))
-        raise HTTPException(status_code=500, detail="Ingestion failed unexpectedly.")
+        raise HTTPException(status_code=500, detail="Ingestion failed unexpectedly.") from e
 
 
 @router.post("/upload", response_model=IngestResponse)
 async def upload_and_ingest(
-    file: UploadFile = File(...),
-    build_graph: bool = Form(default=True),
+    file: Annotated[UploadFile, File()],
+    build_graph: Annotated[bool, Form()] = True,
 ) -> IngestResponse:
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
@@ -43,6 +44,6 @@ async def upload_and_ingest(
         result["file"] = file.filename
         return IngestResponse(**result)
     except IngestionError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e
     finally:
         Path(tmp_path).unlink(missing_ok=True)

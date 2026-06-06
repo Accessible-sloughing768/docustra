@@ -1,11 +1,10 @@
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from enum import Enum
-from functools import lru_cache
-from typing import Any
-
 import time
 import unicodedata
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from enum import StrEnum
+from functools import lru_cache
+from typing import Any
 
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import BaseMessage
@@ -16,7 +15,7 @@ from langchain_ollama import ChatOllama
 from docustra.core import get_settings
 
 
-class RAGPattern(str, Enum):
+class RAGPattern(StrEnum):
     ADAPTIVE = "adaptive"
     AGENTIC = "agentic"
     BRANCHED = "branched"
@@ -39,7 +38,8 @@ class RAGResponse:
 def _clean_text(text: str) -> str:
     """Remove control characters that break JSON serialisation."""
     return "".join(
-        ch for ch in text
+        ch
+        for ch in text
         if ch == "\n" or ch == "\t" or not unicodedata.category(ch).startswith("C")
     )
 
@@ -48,8 +48,7 @@ def _normalise_content(msg: BaseMessage) -> BaseMessage:
     """Gemini 3.x returns content as a list of parts — flatten to clean plain string."""
     if isinstance(msg.content, list):
         text = "".join(
-            p.get("text", "") if isinstance(p, dict) else str(p)
-            for p in msg.content
+            p.get("text", "") if isinstance(p, dict) else str(p) for p in msg.content
         ).strip()
     else:
         text = str(msg.content)
@@ -83,8 +82,7 @@ class BaseRAGStrategy(ABC):
         self._settings = get_settings()
 
     @abstractmethod
-    def query(self, question: str, **kwargs) -> RAGResponse:
-        ...
+    def query(self, question: str, **kwargs) -> RAGResponse: ...
 
     def _format_sources(self, docs) -> list[dict]:
         return [

@@ -89,12 +89,11 @@ def main():
                     st.text(data["reasoning"] or "No reasoning logged.")
                 with st.expander("🔧 Metadata"):
                     st.json(data["metadata"])
-            with col2:
-                with st.expander(f"📎 Sources ({len(data['sources'])})"):
-                    for s in data["sources"]:
-                        st.markdown(f"**{s.get('source', 'unknown')}** — Page {s.get('page', '?')}")
-                        st.caption(s.get("content", "")[:200])
-                        st.divider()
+            with col2, st.expander(f"📎 Sources ({len(data['sources'])})"):
+                for s in data["sources"]:
+                    st.markdown(f"**{s.get('source', 'unknown')}** — Page {s.get('page', '?')}")
+                    st.caption(s.get("content", "")[:200])
+                    st.divider()
         else:
             st.error(f"Query failed ({r.status_code}): {r.text}")
 

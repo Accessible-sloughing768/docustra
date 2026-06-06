@@ -19,18 +19,16 @@ async def query(request: QueryRequest) -> QueryResponse:
         response = strategy.query(request.question, **kwargs)
         return QueryResponse.from_rag_response(response)
     except RetrievalError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:
         logger.error("Query failed", pattern=request.pattern, error=str(e))
-        raise HTTPException(status_code=500, detail=f"Query failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Query failed: {e}") from e
 
 
 @router.get("/patterns")
 async def list_patterns() -> dict:
     from docustra.retrieval.base import RAGPattern
+
     return {
-        "patterns": [
-            {"id": p.value, "name": p.name.replace("_", " ").title()}
-            for p in RAGPattern
-        ]
+        "patterns": [{"id": p.value, "name": p.name.replace("_", " ").title()} for p in RAGPattern]
     }

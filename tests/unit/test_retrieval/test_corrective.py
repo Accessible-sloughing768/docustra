@@ -10,7 +10,7 @@ from docustra.retrieval.corrective import CorrectiveRAG
 @pytest.fixture
 def crag_strategy(mock_llm, mock_vector_store):
     with (
-        patch("docustra.retrieval.corrective.get_llm", return_value=mock_llm),
+        patch("docustra.retrieval.base.get_llm", return_value=mock_llm),
         patch("docustra.retrieval.corrective.VectorStore", return_value=mock_vector_store),
         patch("docustra.retrieval.corrective.get_embeddings", return_value=MagicMock()),
         patch("docustra.retrieval.corrective.get_settings") as mock_settings,
@@ -49,8 +49,8 @@ def test_crag_rewrites_query_when_score_below_threshold(crag_strategy, mock_vect
     ]
     crag_strategy._llm.invoke.side_effect = [
         MagicMock(content="Rewritten query text"),  # rewrite call
-        MagicMock(content="0.8"),                    # score call
-        MagicMock(content="Final answer."),           # answer call
+        MagicMock(content="0.8"),  # score call
+        MagicMock(content="Final answer."),  # answer call
     ]
 
     response = crag_strategy.query("Vague question?")

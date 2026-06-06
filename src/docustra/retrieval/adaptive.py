@@ -6,7 +6,8 @@ A routing layer classifies the query complexity before retrieval:
   - simple    → single-step vector retrieval
   - complex   → multi-step retrieval with sub-question decomposition
 """
-from enum import Enum
+
+from enum import StrEnum
 
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -18,7 +19,7 @@ from docustra.storage.vector_store import VectorStore
 logger = get_logger(__name__)
 
 
-class QueryComplexity(str, Enum):
+class QueryComplexity(StrEnum):
     TRIVIAL = "trivial"
     SIMPLE = "simple"
     COMPLEX = "complex"
@@ -102,7 +103,7 @@ class AdaptiveRAG(BaseRAGStrategy):
             metadata={"complexity": "simple"},
         )
 
-    def _complex_retrieval(self, question: str) -> RAGResponse:
+    def _decompose(self, question: str) -> list[str]:
         decompose_prompt = ChatPromptTemplate.from_messages(
             [
                 (
@@ -112,12 +113,15 @@ class AdaptiveRAG(BaseRAGStrategy):
                 ("human", "{question}"),
             ]
         )
-        sub_questions_raw = (decompose_prompt | self._llm).invoke({"question": question}).content
-        sub_questions = [
+        raw = (decompose_prompt | self._llm).invoke({"question": question}).content
+        return [
             line.split(". ", 1)[-1].strip()
-            for line in sub_questions_raw.strip().splitlines()
+            for line in raw.strip().splitlines()
             if line.strip()
         ][:3]
+
+    def _complex_retrieval(self, question: str) -> RAGResponse:
+        sub_questions = self._decompose(question)
 
         all_docs = []
         for sq in sub_questions:

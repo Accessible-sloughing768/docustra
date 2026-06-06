@@ -1,6 +1,7 @@
+from unittest.mock import MagicMock
+
 import pytest
 from langchain_core.documents import Document
-from unittest.mock import MagicMock, patch
 
 
 @pytest.fixture

@@ -32,6 +32,7 @@ async def health_check() -> HealthResponse:
     # Neo4j
     try:
         from neo4j import GraphDatabase
+
         driver = GraphDatabase.driver(
             settings.neo4j_uri, auth=(settings.neo4j_username, settings.neo4j_password)
         )

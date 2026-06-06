@@ -5,8 +5,6 @@ Decomposes a complex query into parallel sub-questions, runs independent
 retrieval for each branch, then synthesizes all results into one answer.
 Parallel execution via asyncio for efficiency.
 """
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
 
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -84,7 +82,9 @@ class BranchedRAG(BaseRAGStrategy):
 
         seen = set()
         unique_docs = [
-            d for d in all_docs if not (d.page_content[:80] in seen or seen.add(d.page_content[:80]))
+            d
+            for d in all_docs
+            if not (d.page_content[:80] in seen or seen.add(d.page_content[:80]))
         ]
 
         return RAGResponse(
@@ -98,8 +98,8 @@ class BranchedRAG(BaseRAGStrategy):
     def _decompose(self, question: str) -> list[str]:
         chain = _DECOMPOSE_PROMPT | self._llm
         raw = chain.invoke({"question": question}).content.strip()
-        lines = [l.split(". ", 1)[-1].strip() for l in raw.splitlines() if l.strip()]
-        return [l for l in lines if len(l) > 10][:4]
+        lines = [ln.split(". ", 1)[-1].strip() for ln in raw.splitlines() if ln.strip()]
+        return [ln for ln in lines if len(ln) > 10][:4]
 
     def _answer_branch(self, sub_question: str) -> tuple[str, list]:
         docs = self._vector_store.similarity_search(sub_question, k=3)

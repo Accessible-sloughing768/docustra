@@ -1,4 +1,4 @@
-from neo4j import GraphDatabase, Driver
+from neo4j import Driver, GraphDatabase
 
 from docustra.core import GraphError, get_logger, get_settings
 
@@ -76,7 +76,9 @@ class GraphStore:
         rows = self.run_query(cypher, {"names": entity_names})
         lines = []
         for row in rows:
-            connections = [f"{c['rel']} -> {c['neighbor']}" for c in row["connections"] if c["neighbor"]]
+            connections = [
+                f"{c['rel']} -> {c['neighbor']}" for c in row["connections"] if c["neighbor"]
+            ]
             lines.append(f"{row['entity']} ({', '.join(row['type'])}): {'; '.join(connections)}")
         return "\n".join(lines)
 
