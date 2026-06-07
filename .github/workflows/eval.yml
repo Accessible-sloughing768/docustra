@@ -66,7 +66,25 @@ jobs:
         run: uv sync --extra dev
 
       - name: Install additional eval dependencies
-        run: uv pip install rank-bm25 sentence-transformers ragas
+        run: |
+          # Pin ragas <0.3.0: the 0.3+ rewrite requires explicit OpenAI credentials.
+          # 0.1.x–0.2.x uses LangChain natively (respects GOOGLE_API_KEY / GROQ_API_KEY).
+          uv pip install rank-bm25 sentence-transformers "ragas>=0.1.0,<0.3.0"
+          # Compatibility shim: ragas ≤0.4.x imports langchain_community.chat_models.vertexai
+          # which was removed in langchain-community 0.3+. The shim is also applied at
+          # runtime in metrics.py, but we create the file here too for belt-and-suspenders.
+          uv run python - <<'PYEOF'
+          import sys, types, site, os
+          missing = "langchain_community.chat_models.vertexai"
+          sp = site.getsitepackages()[0]
+          shim_path = os.path.join(sp, "langchain_community", "chat_models", "vertexai.py")
+          if not os.path.exists(shim_path):
+              with open(shim_path, "w") as f:
+                  f.write('"""Compatibility shim for ragas."""\nclass ChatVertexAI:\n    pass\n')
+              print(f"Created shim at {shim_path}")
+          else:
+              print("Shim already exists — skipping")
+          PYEOF
 
       - name: Wait for Qdrant
         run: |

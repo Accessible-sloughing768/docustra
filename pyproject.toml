@@ -51,7 +51,9 @@ dependencies = [
     "opentelemetry-sdk>=1.25.0",
     "openinference-instrumentation-langchain>=0.1.0",
     # Evaluation
-    "ragas>=0.2.0",
+    # Pin <0.3.0: ragas 0.3+ rewrote the API to require explicit OpenAI credentials.
+    # 0.1.x–0.2.x uses LangChain natively, respecting GOOGLE_API_KEY / GROQ_API_KEY.
+    "ragas>=0.1.0,<0.3.0",
     # Hybrid retrieval — BM25 keyword search
     "rank-bm25>=0.2.2",
     # Prompt versioning
