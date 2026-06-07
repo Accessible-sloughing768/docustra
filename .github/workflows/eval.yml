@@ -62,6 +62,13 @@ jobs:
       - name: Install dependencies
         run: uv sync --extra dev
 
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-models-all-MiniLM-L6-v2
+          restore-keys: hf-models-
+
       - name: Install additional eval dependencies
         run: |
           # Pin ragas <0.3.0: the 0.3+ rewrite requires explicit OpenAI credentials.
@@ -82,6 +89,20 @@ jobs:
           else:
               print("Shim already exists — skipping")
           PYEOF
+
+      - name: Pre-download embedding model
+        env:
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
+        run: |
+          # Download the sentence-transformer model with retries to handle HF rate limits.
+          # The actions/cache step above will restore the model on subsequent runs.
+          for attempt in 1 2 3 4 5; do
+            uv run python -c "
+          from sentence_transformers import SentenceTransformer
+          SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+          print('Model ready')
+          " && break || echo "Download attempt $attempt failed, retrying in 30s..." && sleep 30
+          done
 
       - name: Wait for Qdrant
         run: |
