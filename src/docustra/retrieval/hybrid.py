@@ -104,9 +104,9 @@ class BM25Index:
 
     def search(self, query: str, docs: list[Document], k: int = 10) -> list[Document]:
         """Return top-k documents ranked by BM25 score."""
-        self._ensure_built(docs)
         if not docs:
             return []
+        self._ensure_built(docs)
 
         tokenized_query = query.lower().split()
         assert self._bm25 is not None, "BM25 index not built"

@@ -89,7 +89,9 @@ def run_queries(pairs: list[dict], pattern: str) -> tuple[list[str], list[str], 
             response = strategy.query(q)
             questions.append(q)
             answers.append(response.answer)
-            contexts.append([s.get("content", s.get("passage_preview", "")) for s in response.sources])
+            contexts.append(
+                [s.get("content", s.get("passage_preview", "")) for s in response.sources]
+            )
         except Exception as e:
             logger.error("Query failed", question=q[:60], error=str(e))
             questions.append(q)
@@ -136,9 +138,7 @@ def check_thresholds(scores: dict[str, float], settings) -> tuple[bool, list[str
     for metric, threshold in thresholds.items():
         score = scores.get(metric, 0.0)
         if score < threshold:
-            failures.append(
-                f"  ✗ {metric}: {score:.4f} < threshold {threshold:.2f}"
-            )
+            failures.append(f"  ✗ {metric}: {score:.4f} < threshold {threshold:.2f}")
         else:
             logger.info("Metric passed", metric=metric, score=round(score, 4), threshold=threshold)
 
@@ -184,8 +184,10 @@ def main() -> int:
 
     if args.prompt_version:
         import os
+
         os.environ["PROMPT_VERSION"] = args.prompt_version
         from docustra.core.prompts import invalidate_cache
+
         invalidate_cache()
 
     logger.info(

@@ -66,6 +66,32 @@ with warnings.catch_warnings():
     )
 
 
+def _configure_ragas_llm() -> None:
+    """
+    Configure ragas metrics to use the project's LLM (Gemini / Groq)
+    instead of the ragas default (OpenAI).
+
+    ragas 0.2.x exposes a `llm` attribute on each metric object that
+    accepts a ``LangchainLLMWrapper``.  We set it here so that
+    ``evaluate()`` never tries to instantiate ChatOpenAI.
+    """
+    try:
+        from ragas.llms import LangchainLLMWrapper
+
+        from docustra.retrieval.base import get_llm
+
+        wrapped = LangchainLLMWrapper(get_llm())
+        for metric in (faithfulness, answer_relevancy, context_precision, context_recall):
+            if hasattr(metric, "llm"):
+                metric.llm = wrapped  # type: ignore[attr-defined]
+        logger.debug("ragas metrics configured with project LLM")
+    except Exception as exc:
+        logger.warning("Could not configure ragas LLM — falling back to default", error=str(exc))
+
+
+_configure_ragas_llm()
+
+
 @dataclass
 class EvaluationResult:
     faithfulness: float
