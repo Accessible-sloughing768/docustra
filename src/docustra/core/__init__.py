@@ -1,5 +1,4 @@
 from docustra.core.config import Settings, get_settings
-from docustra.core.prompts import get_prompt, get_prompt_version, invalidate_cache
 from docustra.core.exceptions import (
     DocustraError,
     EvaluationError,
@@ -10,6 +9,7 @@ from docustra.core.exceptions import (
     StorageError,
 )
 from docustra.core.logging import configure_logging, get_logger
+from docustra.core.prompts import get_prompt, get_prompt_version, invalidate_cache
 
 __all__ = [
     "Settings",

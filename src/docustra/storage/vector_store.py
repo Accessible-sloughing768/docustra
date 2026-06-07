@@ -41,6 +41,7 @@ class VectorStore:
     def add_documents(self, docs: list[Document]) -> list[str]:
         if not docs:
             return []
+        assert self._store is not None, "VectorStore not initialised"
         try:
             ids = [str(uuid4()) for _ in docs]
             self._store.add_documents(docs, ids=ids)
@@ -53,6 +54,7 @@ class VectorStore:
         self, query: str, k: int | None = None, score_threshold: float | None = None
     ) -> list[Document]:
         k = k or self._settings.retrieval_top_k
+        assert self._store is not None, "VectorStore not initialised"
         try:
             if score_threshold is not None:
                 return self._store.similarity_search_with_relevance_scores(
@@ -66,6 +68,7 @@ class VectorStore:
         self, query: str, k: int | None = None
     ) -> list[tuple[Document, float]]:
         k = k or self._settings.retrieval_top_k
+        assert self._store is not None, "VectorStore not initialised"
         try:
             return self._store.similarity_search_with_relevance_scores(query, k=k)
         except Exception as e:
@@ -75,6 +78,7 @@ class VectorStore:
         self, query: str, k: int | None = None, fetch_k: int = 20, lambda_mult: float = 0.5
     ) -> list[Document]:
         k = k or self._settings.retrieval_top_k
+        assert self._store is not None, "VectorStore not initialised"
         try:
             return self._store.max_marginal_relevance_search(
                 query, k=k, fetch_k=fetch_k, lambda_mult=lambda_mult
@@ -83,4 +87,5 @@ class VectorStore:
             raise StorageError(f"MMR search failed: {e}") from e
 
     def as_retriever(self, **kwargs: Any):
+        assert self._store is not None, "VectorStore not initialised"
         return self._store.as_retriever(**kwargs)

@@ -94,8 +94,7 @@ class BM25Index:
             from rank_bm25 import BM25Okapi
         except ImportError as e:
             raise ImportError(
-                "rank-bm25 is required for hybrid retrieval. "
-                "Install with: pip install rank-bm25"
+                "rank-bm25 is required for hybrid retrieval. Install with: pip install rank-bm25"
             ) from e
 
         self._docs = docs
@@ -110,6 +109,7 @@ class BM25Index:
             return []
 
         tokenized_query = query.lower().split()
+        assert self._bm25 is not None, "BM25 index not built"
         scores = self._bm25.get_scores(tokenized_query)
 
         # Pair with docs and sort
@@ -152,9 +152,7 @@ class HybridRAG(BaseRAGStrategy):
         bm25_docs = self._bm25.search(question, all_candidates, k=self._hybrid_top_k)
 
         # ── 3. Reciprocal Rank Fusion ──────────────────────────────────────
-        fused_docs = _reciprocal_rank_fusion(
-            bm25_docs, vector_docs, bm25_weight=self._bm25_weight
-        )
+        fused_docs = _reciprocal_rank_fusion(bm25_docs, vector_docs, bm25_weight=self._bm25_weight)
         logger.info(
             "RRF fusion",
             bm25_candidates=len(bm25_docs),
